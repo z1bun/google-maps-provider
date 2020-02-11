@@ -1,5 +1,5 @@
 {
-    "name": "geocoder-php/google-maps-provider",
+    "name": "codificar-geocoder-php/google-maps-provider",
     "type": "library",
     "description": "Geocoder GoogleMaps adapter",
     "keywords": [],
