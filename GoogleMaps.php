@@ -111,13 +111,14 @@ final class GoogleMaps extends AbstractHttpProvider implements Provider
 
     public function geocodeQuery(GeocodeQuery $query): Collection
     {
+        
         // Google API returns invalid data if IP address given
         // This API doesn't handle IPs
         if (filter_var($query->getText(), FILTER_VALIDATE_IP)) {
             throw new UnsupportedOperation('The GoogleMaps provider does not support IP addresses, only street addresses.');
         }
 
-        $url = sprintf(self::GEOCODE_ENDPOINT_URL_SSL, rawurlencode($query->getText()));
+        $url = sprintf(self::GEOCODE_ENDPOINT_URL_SSL, rawurlencode(trim($query->getText())));
         if (null !== $bounds = $query->getBounds()) {
             $url .= sprintf(
                 '&bounds=%s,%s|%s,%s',
@@ -131,6 +132,10 @@ final class GoogleMaps extends AbstractHttpProvider implements Provider
         if (null !== $components = $query->getData('components')) {
             $serializedComponents = is_string($components) ? $components : $this->serializeComponents($components);
             $url .= sprintf('&components=%s', urlencode($serializedComponents));
+        }
+
+        if (null !== $placeId = $query->getData('place_id')) {
+            $url .= sprintf('&place_id=%s', urlencode($placeId));
         }
 
         return $this->fetchUrl($url, $query->getLocale(), $query->getLimit(), $query->getData('region', $this->region));
