@@ -137,6 +137,11 @@ final class GoogleMaps extends AbstractHttpProvider implements Provider
         if (null !== $placeId = $query->getData('place_id')) {
             $url .= sprintf('&place_id=%s', urlencode($placeId));
         }
+        
+        $types = $query->getData('types');
+        if (null !== $types) {
+            $url .= sprintf('&types=%s', urlencode($types));
+        }
 
         return $this->fetchUrl($url, $query->getLocale(), $query->getLimit(), $query->getData('region', $this->region));
     }
